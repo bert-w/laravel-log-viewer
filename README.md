@@ -12,9 +12,9 @@ A fast log file viewer for Laravel that is easy to add and configure.
 - Bootstrap 3 + 4 + 5 templates
 - Bootstrap 5 comes with a **Dark Mode** setting
 
-| Dark Mode | Light Mode |
-|:---------:|:----------:|
-|   ![]()   |   ![]()    |
+|                                      Dark Mode                                      |                                      Light Mode                                      |
+|:-----------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------:|
+| ![](https://github.com/bert-w/laravel-log-viewer/blob/master/art/dark.png?raw=true) | ![](https://github.com/bert-w/laravel-log-viewer/blob/master/art/light.png?raw=true) |
 
 # Installation
 
