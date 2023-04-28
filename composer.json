@@ -1,0 +1,24 @@
+{
+    "name": "bert-w/laravel-log-viewer",
+    "description": "A fast Laravel log viewer to read any of your log files.",
+    "license": "MIT",
+    "require": {
+        "php": "^7.4|^8.0",
+        "illuminate/http": "*",
+        "illuminate/filesystem": "*",
+        "illuminate/pagination": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "BertW\\LaravelLogViewer\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "BertW\\LaravelLogViewer\\LogViewerServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable"
+}
