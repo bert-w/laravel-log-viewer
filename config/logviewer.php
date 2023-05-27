@@ -37,6 +37,11 @@ return [
     'big_file_threshold' => 2**26,
 
     /*
+    | The sorting order of the log files how they appear in the interface.
+    */
+    'sort_by' => ['modified_at', 'desc'],
+
+    /*
     | Preselect the first log file based on the given ordering.
     | If `null`, no log file will be opened by default.
     */

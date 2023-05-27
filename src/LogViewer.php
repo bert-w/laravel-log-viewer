@@ -28,11 +28,6 @@ class LogViewer
     protected $fs;
 
     /**
-     * @var \Illuminate\Support\Collection|\BertW\LaravelLogViewer\Log[]
-     */
-    protected $logs;
-
-    /**
      * @var array
      */
     protected $fallbackConfig;
@@ -151,42 +146,41 @@ class LogViewer
             return null;
         }
 
-        return $this->logs()
-            ->sortBy(fn($i) => $i->$attribute, SORT_REGULAR, strtolower($order) === 'desc')
-            ->first();
+        return $this->logs([$attribute, $order])->first();
     }
 
     /**
      * Get all the logs.
      *
-     * @param int $options
-     * @param bool $descending
+     * @param array|null $sortBy
      * @return \BertW\LaravelLogViewer\Log[]|\Illuminate\Support\Collection
      */
-    public function logs($options = SORT_NATURAL, $descending = true)
+    public function logs(array $sortBy = null)
     {
-        if (is_null($this->logs) && $this->fs->exists($path = $this->storagePath)) {
-            $dirs = $this->fs->directories($path);
-
-            $collect = collect();
-            foreach (array_merge($dirs, [$path]) as $dir) {
-                foreach ($this->fs->files($dir) as $file) {
-                    $collect[$file->getRealPath()] = new Log([
-                        'path' => $file->getPath(),
-                        'real_path' => $file->getRealPath(),
-                        'basename' => $file->getBasename(),
-                        'accessed_at' => Carbon::createFromTimestamp($file->getATime() ?: 0),
-                        'created_at' => Carbon::createFromTimestamp($file->getCTime() ?: 0),
-                        'modified_at' => Carbon::createFromTimestamp($file->getMTime() ?: 0),
-                        'extension' => $file->getExtension(),
-                        'file' => $file,
-                        'is_big' => ($big = $this->config('big_file_threshold')) && $file->getSize() > $big,
-                    ]);
-                }
-            }
-            $this->logs = $collect->sortKeys($options, $descending);
+        if (!$this->fs->exists($path = $this->storagePath)) {
+            return collect();
         }
 
-        return $this->logs;
+        [$attribute, $order] = $sortBy ?? $this->config('sort_by');
+
+        $dirs = $this->fs->directories($path);
+
+        $collect = collect();
+        foreach (array_merge($dirs, [$path]) as $dir) {
+            foreach ($this->fs->files($dir) as $file) {
+                $collect[$file->getRealPath()] = new Log([
+                    'path' => $file->getPath(),
+                    'real_path' => $file->getRealPath(),
+                    'basename' => $file->getBasename(),
+                    'accessed_at' => Carbon::createFromTimestamp($file->getATime() ?: 0),
+                    'created_at' => Carbon::createFromTimestamp($file->getCTime() ?: 0),
+                    'modified_at' => Carbon::createFromTimestamp($file->getMTime() ?: 0),
+                    'extension' => $file->getExtension(),
+                    'file' => $file,
+                    'is_big' => ($big = $this->config('big_file_threshold')) && $file->getSize() > $big,
+                ]);
+            }
+        }
+        return $collect->sortBy(fn($i) => $i->$attribute, SORT_REGULAR, strtolower($order) === 'desc');
     }
 }
