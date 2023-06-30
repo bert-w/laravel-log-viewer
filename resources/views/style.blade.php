@@ -36,13 +36,13 @@
         max-height: 300px;
         overflow-y: scroll;
     }
-    .bi {
+    #log-viewer .bi {
         width: 1em;
         height: 1em;
         vertical-align: -.125em;
         fill: currentcolor;
     }
-    .mt-4 {
+    #log-viewer .mt-4 {
         margin-top: 1.5rem !important;
     }
 </style>

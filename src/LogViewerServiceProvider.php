@@ -21,6 +21,7 @@ class LogViewerServiceProvider extends ServiceProvider
     {
         $this->app->booted(function ($app) {
             Route::namespace('BertW\LaravelLogViewer\Http\Controllers')
+                ->as($app['config']->get('logviewer.route_name_prefix') ?? 'logviewer.')
                 ->middleware([Authenticate::class])
                 ->prefix($app['config']->get('logviewer.url') ?? '/logviewer')
                 ->group(__DIR__ . '/Http/routes.php');
