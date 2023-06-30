@@ -46,7 +46,7 @@
         </li>
     </ul>
 </div>
-
+@push('logviewer::scripts')
 <script>
     /**
      * Set data-bs-theme on the root HTML element.
@@ -59,3 +59,4 @@
         });
     });
 </script>
+@endpush

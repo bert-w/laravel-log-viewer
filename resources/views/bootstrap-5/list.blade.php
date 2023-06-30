@@ -1,4 +1,4 @@
-<div class="list-group shadow">
+<div class="list-group shadow mb-4">
     @foreach($logs as $path => $log)
         <div class="list-group-item list-group-item-action py-0">
             <div class="row">

@@ -1,4 +1,4 @@
-<div class="list-group">
+<div class="list-group mb-4">
     @foreach($logs as $path => $log)
         <div class="list-group-item">
             <div class="row">

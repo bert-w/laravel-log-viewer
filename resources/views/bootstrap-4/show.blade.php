@@ -1,4 +1,4 @@
-<div class="card shadow mt-4">
+<div class="card shadow">
     <div class="card-header d-flex justify-content-between">
         <div><a href="" class="text-decoration-none">{{ $selectedLog->path . DIRECTORY_SEPARATOR . $selectedLog->basename }}</a>
             <br/>
@@ -8,9 +8,9 @@
             <div class="mr-4">{{ $selectedLog->linesCount() }} lines</div>
             <div class="mr-4 {{ $selectedLog->is_big ? 'text-danger' : '' }}">{{ $selectedLog->size() }}</div>
             <div>
-                <a href="{{ route('logviewer.raw', $selectedLog->encodedPath()) }}" target="_blank" class="btn btn-sm btn-primary">Raw</a>
-                <a href="{{ route('logviewer.download', $selectedLog->encodedPath()) }}" class="btn btn-sm btn-primary">Download</a>
-                <form id="logviewer-delete" style="display: none;" method="POST" action="{{ route('logviewer.destroy', $selectedLog->encodedPath()) }}">
+                <a href="{{ $logViewer->route('raw', $selectedLog->encodedPath()) }}" target="_blank" class="btn btn-sm btn-primary">Raw</a>
+                <a href="{{ $logViewer->route('download', $selectedLog->encodedPath()) }}" class="btn btn-sm btn-primary">Download</a>
+                <form id="logviewer-delete" style="display: none;" method="POST" action="{{ $logViewer->route('destroy', $selectedLog->encodedPath()) }}">
                     <input type="hidden" name="_method" value="DELETE" />
                 </form>
                 <button onclick="event.preventDefault(); if(confirm('Really delete this file?')) { document.querySelector('#logviewer-delete').submit(); }" class="btn btn-sm btn-danger">Delete</button>

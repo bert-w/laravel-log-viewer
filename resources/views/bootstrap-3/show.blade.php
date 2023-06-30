@@ -1,4 +1,4 @@
-<div class="panel panel-default mt-4">
+<div class="panel panel-default">
     <div class="panel-heading">
         <div class="row">
             <div class="col-md-6"><a href="" class="text-decoration-none">{{ $selectedLog->path . DIRECTORY_SEPARATOR . $selectedLog->basename }}</a>
@@ -10,9 +10,9 @@
                     <div class="col-md-4">{{ $selectedLog->linesCount() }} lines</div>
                     <div class="col-md-4 {{ $selectedLog->is_big ? 'text-danger' : '' }}">{{ $selectedLog->size() }}</div>
                     <div class="col-md-4">
-                        <a href="{{ route('logviewer.raw', $selectedLog->encodedPath()) }}" target="_blank" class="btn btn-sm btn-primary">Raw</a>
-                        <a href="{{ route('logviewer.download', $selectedLog->encodedPath()) }}" class="btn btn-sm btn-primary">Download</a>
-                        <form id="logviewer-delete" style="display: none;" method="POST" action="{{ route('logviewer.destroy', $selectedLog->encodedPath()) }}">
+                        <a href="{{ $logViewer->route('raw', $selectedLog->encodedPath()) }}" target="_blank" class="btn btn-sm btn-primary">Raw</a>
+                        <a href="{{ $logViewer->route('download', $selectedLog->encodedPath()) }}" class="btn btn-sm btn-primary">Download</a>
+                        <form id="logviewer-delete" style="display: none;" method="POST" action="{{ $logViewer->route('destroy', $selectedLog->encodedPath()) }}">
                             <input type="hidden" name="_method" value="DELETE" />
                         </form>
                         <button onclick="event.preventDefault(); if(confirm('Really delete this file?')) { document.querySelector('#logviewer-delete').submit(); }" class="btn btn-sm btn-danger">Delete</button>

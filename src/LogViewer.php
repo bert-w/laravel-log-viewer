@@ -41,6 +41,17 @@ class LogViewer
     }
 
     /**
+     * Get a route for the logviewer application, automatically prefixed.
+     * @return string
+     */
+    public function route()
+    {
+        $args = func_get_args();
+
+        return route($this->config('route_name_prefix', 'logviewer.') . $args[0], array_shift($args));
+    }
+
+    /**
      * Get a config variable for the log viewer.
      * @param string $config
      * @param mixed $default
