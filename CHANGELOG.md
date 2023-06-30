@@ -1,5 +1,8 @@
 # Release Notes
 
+## [v0.3.1](https://github.com/bert-w/laravel-log-viewer/compare/v0.3.0...v0.3.1) - 2023-06-30
+- Fix route generation.
+
 ## [v0.3.0](https://github.com/bert-w/laravel-log-viewer/compare/v0.2.1...v0.3.0) - 2023-06-30
 - Added the ability to override the route name prefix using `config('logviewer.route_name_prefix')`.
 - Template improvements.
