@@ -48,7 +48,7 @@ class LogViewer
     {
         $args = func_get_args();
 
-        return route($this->config('route_name_prefix', 'logviewer.') . $args[0], array_shift($args));
+        return route($this->config('route_name_prefix', 'logviewer.') . array_shift($args), ...$args);
     }
 
     /**
