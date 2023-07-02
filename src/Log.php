@@ -33,13 +33,13 @@ class Log extends Model
     private $handle;
 
     /**
-     * Get the encoded path.
+     * Get the route parameter for the URL which resolves to a unique log file.
      *
      * @return string
      */
-    public function encodedPath()
+    public function routeParameter()
     {
-        return base64_encode($this->real_path);
+        return RouteBinding::from($this);
     }
 
     /**

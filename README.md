@@ -47,6 +47,11 @@ return [
     'url' => '/logviewer',
 
     /*
+    | The route name prefix to use for the logviewer route names.
+    */
+    'route_name_prefix' => 'logviewer.',
+
+    /*
     | The title for the logviewer page. If `null`, no title is shown.
     */
     'title' => config('app.name') . ' Log Viewer',
@@ -59,15 +64,27 @@ return [
     /*
     | The amount of lines from a log file that are read per page. The amount of logs that
     | are shown per page depends on this value, and it may differ depending on the
-    | length of a single log record.
+    | length of a single log record (Default: 3200).
     */
     'lines_per_page' => 3200,
 
     /*
+    | The max length in bytes that a single line may have. Content that exceeds this limit will
+    | be truncated from view. Note: disabling this feature with `null` may cause memory issues
+    | with big log files that exceed this max line length (Default: 16000).
+    */
+    'max_line_length' => 16000,
+
+    /*
     | The threshold in bytes for a log file to be marked as "big". This allows
-    | the frontend to visually indicate that the log file is big.
+    | the frontend to visually indicate that the log file is big (Default: 64MB).
     */
     'big_file_threshold' => 2**26,
+
+    /*
+    | The sorting order of the log files how they appear in the interface.
+    */
+    'sort_by' => ['modified_at', 'desc'],
 
     /*
     | Preselect the first log file based on the given ordering.
@@ -89,18 +106,13 @@ add the following lines in your `register()` method:
 By default, if no custom authorization callback is given, the log viewer is only accessible in your `local` environment.
 
 ## Customization
-Including the log viewer in one of your own templates can be done simply in your view file, using:
+Including the log viewer in one of your own templates can be done simply by modifying the view file `resources/views/vendor/logviewer/index.blade.php` (available after the publish-command), which has the following default:
 ```php
-@section('style')
-    {{-- Append the custom style lines in the <head> --}}
-    @include('logviewer::style')
+@extends('logviewer::bootstrap-5.layout')
+@section('content')
+    <div class="container">
+        @include('logviewer::bootstrap-5.index')
+    </div>
 @endsection
-{{-- Any one of the following --}}
-@include('logviewer::bootstrap-3.index')
-@include('logviewer::bootstrap-4.index')
-@include('logviewer::bootstrap-5.index')
 ```
-This setup requires the parent template to include the necessary css+js for Bootstrap 3/4/5.
-
-A complete template (including `<html>` and Bootstrap lines from `https://cdn.jsdelivr.net`) is available from the view
-`logviewer::bootstrap-5.layout.index`.
+The standard layout contains pre-included Bootstrap CSS/JS files linked from `https://cdn.jsdelivr.net`.
