@@ -12,6 +12,12 @@ return [
     'route_name_prefix' => 'logviewer.',
 
     /*
+    | Display name for log files when they are listed in the interface, which is one of:
+    | 'short' (filename only) or 'full' (absolute path).
+    */
+    'log_display_name' => 'short',
+
+    /*
     | The title for the logviewer page. If `null`, no title is shown.
     */
     'title' => config('app.name') . ' Log Viewer',

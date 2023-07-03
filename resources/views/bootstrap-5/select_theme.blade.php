@@ -1,5 +1,5 @@
 <div class="dropdown">
-    <button class="btn btn-primary py-2 px-0 px-lg-2 dropdown-toggle d-flex align-items-center" id="bd-theme"
+    <button class="btn btn-sm btn-primary dropdown-toggle d-flex align-items-center" id="bd-theme"
             type="button" aria-expanded="false" data-bs-toggle="dropdown" data-bs-display="static"
             aria-label="Toggle theme (auto)">
         <svg class="bi my-1 theme-icon-active">

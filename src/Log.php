@@ -33,13 +33,13 @@ class Log extends Model
     private $handle;
 
     /**
-     * Get the encoded path.
+     * Get the route parameter for the URL which resolves to a unique log file.
      *
      * @return string
      */
-    public function encodedPath()
+    public function routeParameter()
     {
-        return base64_encode($this->real_path);
+        return RouteBinding::from($this);
     }
 
     /**
@@ -152,12 +152,18 @@ class Log extends Model
     }
 
     /**
-     * Get a pretty path representation from this log's path.
+     * Get the display name for this log.
      *
      * @return string
      */
-    public function prettyPath()
+    public function displayName()
     {
-        return str_replace(DIRECTORY_SEPARATOR, ' ' . DIRECTORY_SEPARATOR . ' ', $this->path);
+        switch(app(LogViewer::class)->config('log_display_name')) {
+            case 'full':
+                return $this->real_path;
+            case 'short':
+            default:
+                return $this->basename;
+        }
     }
 }

@@ -3,6 +3,7 @@
 namespace BertW\LaravelLogViewer\Http\Controllers;
 
 use BertW\LaravelLogViewer\LogViewer;
+use BertW\LaravelLogViewer\RouteBinding;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
@@ -10,41 +11,36 @@ class LogViewerController extends Controller
 {
     public function index(Request $request, LogViewer $logViewer)
     {
-        return view('logviewer::bootstrap-5.layout.index');
+        return view('logviewer::index', [
+            'logViewerFile' => ($param = $request->route('logViewerFile')) ? RouteBinding::parse($param) : null,
+        ]);
     }
 
-    public function raw(Request $request, LogViewer $logViewer, $file)
+    public function raw(Request $request)
     {
-        $this->validateFile($file = base64_decode($file));
-
-        return response()->file($file, ['Content-Type' => 'text/plain']);
-    }
-
-    /**
-     * Validate a real path by checking if it is in the storage path as defined by the log viewer.
-     *
-     * @param string $file
-     * @return void
-     * @throws \Symfony\Component\HttpKernel\Exception\HttpException
-     */
-    protected function validateFile($file)
-    {
-        if (!str_starts_with($file, app(LogViewer::class)->storagePath())) {
-            abort(403, 'This file is not a valid file or it is not in the log directory.');
+        if (!$log = RouteBinding::parse($request->route('logViewerFile'))) {
+            abort(404);
         }
+
+        return response()->file($log->real_path, ['Content-Type' => 'text/plain']);
     }
 
-    public function download(Request $request, LogViewer $logViewer, $file)
+    public function download(Request $request)
     {
-        $this->validateFile($file = base64_decode($file));
+        if (!$log = RouteBinding::parse($request->route('logViewerFile'))) {
+            abort(404);
+        }
 
-        return response()->download($file);
+        return response()->download($log->real_path);
     }
 
-    public function destroy(Request $request, LogViewer $logViewer, $file)
+    public function destroy(Request $request, LogViewer $logViewer)
     {
-        $this->validateFile($file = base64_decode($file));
-        $logViewer->fileSystem()->delete($file);
+        if (!$log = RouteBinding::parse($request->route('logViewerFile'))) {
+            abort(404);
+        }
+
+        $logViewer->fileSystem()->delete($log->real_path);
 
         return redirect()->back();
     }

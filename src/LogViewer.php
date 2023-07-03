@@ -3,7 +3,6 @@
 namespace BertW\LaravelLogViewer;
 
 use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Psr\Log\LogLevel;
@@ -127,21 +126,14 @@ class LogViewer
     }
 
     /**
-     * Get the selected log (if any).
+     * Try to retrieve a model from the url route binding.
      *
-     * @param \Illuminate\Http\Request|null $request
-     * @return Log|null
+     * @param string $value
+     * @return \BertW\LaravelLogViewer\Log|false
      */
-    public function selectedLog(Request $request = null)
+    public function retrieveRouteBinding($value)
     {
-        $uri = ($request ?? request())->get('v');
-        $v = $uri ? base64_decode($uri) : null;
-
-        if (empty($v) && $this->config('preselect')) {
-            return $this->preselected();
-        }
-
-        return $this->logs()[$v] ?? null;
+        return RouteBinding::parse($value);
     }
 
     /**

@@ -15,6 +15,10 @@ class LogViewerServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../config/logviewer.php' => config_path('logviewer.php'),
         ], 'config');
+
+        $this->publishes([
+            __DIR__ . '/../resources/views/index.blade.php' => resource_path('views/vendor/logviewer/index.blade.php'),
+        ]);
     }
 
     public function register()

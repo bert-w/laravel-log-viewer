@@ -8,9 +8,9 @@
             <div class="me-4">{{ $selectedLog->linesCount() }} lines</div>
             <div class="me-4 {{ $selectedLog->is_big ? 'text-danger' : '' }}">{{ $selectedLog->size() }}</div>
             <div>
-                <a href="{{ $logViewer->route('raw', $selectedLog->encodedPath()) }}" target="_blank" class="btn btn-sm btn-primary">Raw</a>
-                <a href="{{ $logViewer->route('download', $selectedLog->encodedPath()) }}" class="btn btn-sm btn-primary">Download</a>
-                <form id="logviewer-delete" style="display: none;" method="POST" action="{{ $logViewer->route('destroy', $selectedLog->encodedPath()) }}">
+                <a href="{{ $logViewer->route('raw', $selectedLog->routeParameter()) }}" target="_blank" class="btn btn-sm btn-primary">Raw</a>
+                <a href="{{ $logViewer->route('download', $selectedLog->routeParameter()) }}" class="btn btn-sm btn-primary">Download</a>
+                <form id="logviewer-delete" style="display: none;" method="POST" action="{{ $logViewer->route('destroy', $selectedLog->routeParameter()) }}">
                     <input type="hidden" name="_method" value="DELETE" />
                 </form>
                 <button onclick="event.preventDefault(); if(confirm('Really delete this file?')) { document.querySelector('#logviewer-delete').submit(); }" class="btn btn-sm btn-danger">Delete</button>
