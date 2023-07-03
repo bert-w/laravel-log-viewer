@@ -13,7 +13,7 @@
     }
 
     #log-viewer .table .view-stacktrace:hover, #log-viewer .table .view-stacktrace:focus {
-        background: rgba(0,0,0,0.1);
+        background: rgba(0, 0, 0, 0.1);
     }
 
     #log-viewer .table .stacktrace {
@@ -36,12 +36,14 @@
         max-height: 300px;
         overflow-y: scroll;
     }
+
     #log-viewer .bi {
         width: 1em;
         height: 1em;
         vertical-align: -.125em;
         fill: currentcolor;
     }
+
     #log-viewer .mt-4 {
         margin-top: 1.5rem !important;
     }
