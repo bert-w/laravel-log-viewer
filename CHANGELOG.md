@@ -1,5 +1,10 @@
 # Release Notes
 
+## [v0.4.0](https://github.com/bert-w/laravel-log-viewer/compare/v0.3.1...v0.4.0) - 2023-07-03
+- Improved route format.
+- Added `config('logviewer.log_display_name')` option to change the display name appearance of a log.
+- Added default Bootstrap 5 view which can be overridden using `{project}/resources/views/vendor/logviewer/index.blade.php`.
+
 ## [v0.3.1](https://github.com/bert-w/laravel-log-viewer/compare/v0.3.0...v0.3.1) - 2023-06-30
 - Fix route generation.
 
