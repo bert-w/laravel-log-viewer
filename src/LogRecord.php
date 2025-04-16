@@ -4,15 +4,16 @@ namespace BertW\LaravelLogViewer;
 
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
+use Illuminate\Support\Collection;
 
 /**
- * @property object $heading
- * @property string $raw_heading
- * @property \Illuminate\Support\Collection $lines
+ * @property ?object $heading
+ * @property ?string $raw
+ * @property ?string $raw_heading
+ * @property ?Collection<array-key, string> $lines
  */
-class LogRecord extends Model
+final class LogRecord extends Model
 {
-
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
@@ -25,12 +26,11 @@ class LogRecord extends Model
 
     /**
      * Separate the heading from the lines and assign them as properties.
-     *
-     * @return void
      */
-    protected function buildLines()
+    protected function buildLines(): void
     {
-        $lines = preg_split("/\r\n|\n|\r/", trim($this->raw));
+        /** @var string[] $lines */
+        $lines = preg_split("/\r\n|\n|\r/", trim($this->raw)) ?: [];
         $heading = array_shift($lines);
         $this->lines = collect($lines);
         $this->raw_heading = $heading ?? '';
@@ -38,10 +38,8 @@ class LogRecord extends Model
 
     /**
      * Build the heading (first log line) for this record.
-     *
-     * @return void
      */
-    protected function buildHeading()
+    protected function buildHeading(): void
     {
         $logViewer = app(LogViewer::class);
 
@@ -54,7 +52,7 @@ class LogRecord extends Model
         $matches = array_map(fn($i) => $i === '' ? null : $i, $matches);
 
         $this->heading = (object)[
-            'created_at' => (function () use ($matches) {
+            'created_at' => (static function () use ($matches) {
                 if ($date = $matches[1] ?? null) {
                     try {
                         return Carbon::parse($date);
@@ -72,12 +70,9 @@ class LogRecord extends Model
 
     /**
      * Hydrate a chunk of log lines to log records.
-     *
-     * @param string $chunk
-     * @param bool $reverse
-     * @return static[]
+     * @return array<static>
      */
-    public static function hydrate($chunk, $reverse = true)
+    public static function hydrate(string $chunk, bool $reverse = true): array
     {
         preg_match_all(app(LogViewer::class)->pattern('logs'), $chunk, $matches, PREG_OFFSET_CAPTURE);
 
@@ -89,13 +84,13 @@ class LogRecord extends Model
 
         $arr = [];
         foreach ($logs as $record) {
-            $arr[] = new LogRecord(['raw' => $record]);
+            $arr[] = new static(['raw' => $record]);
         }
 
         return $reverse ? array_reverse($arr) : $arr;
     }
 
-    public function bootstrapClass()
+    public function bootstrapClass(): ?string
     {
         return app(LogViewer::class)->logLevels()[strtolower($this->heading->log_level ?? '')] ?? null;
     }

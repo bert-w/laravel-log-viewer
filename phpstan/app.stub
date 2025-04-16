@@ -1,0 +1,12 @@
+<?php
+
+/**
+ * Get the available container instance.
+ *
+ * @template TClass of object
+ *
+ * @param  string|class-string<TClass>|null  $abstract
+ * @param  array  $parameters
+ * @return ($abstract is class-string<TClass> ? TClass : ($abstract is null ? \Illuminate\Contracts\Foundation\Application : mixed))
+ */
+function app($abstract = null, array $parameters = []) {}

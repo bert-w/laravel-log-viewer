@@ -4,44 +4,47 @@ namespace BertW\LaravelLogViewer\Http\Controllers;
 
 use BertW\LaravelLogViewer\LogViewer;
 use BertW\LaravelLogViewer\RouteBinding;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
+use Illuminate\Contracts\View\Factory as ViewFactory;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class LogViewerController extends Controller
+class LogViewerController
 {
-    public function index(Request $request, LogViewer $logViewer)
+    public function index(Request $request, LogViewer $logViewer): ViewFactory
     {
-        return view('logviewer::index', [
+        return app(ViewFactory::class)('logviewer::index', [
             'logViewerFile' => ($param = $request->route('logViewerFile')) ? RouteBinding::parse($param) : null,
         ]);
     }
 
-    public function raw(Request $request)
+    public function raw(Request $request): BinaryFileResponse
     {
         if (!$log = RouteBinding::parse($request->route('logViewerFile'))) {
-            abort(404);
+            throw new NotFoundHttpException();
         }
 
-        return response()->file($log->real_path, ['Content-Type' => 'text/plain']);
+        return app(ResponseFactory::class)->file($log->real_path, ['Content-Type' => 'text/plain']);
     }
 
-    public function download(Request $request)
+    public function download(Request $request): mixed
     {
         if (!$log = RouteBinding::parse($request->route('logViewerFile'))) {
-            abort(404);
+            throw new NotFoundHttpException();
         }
 
-        return response()->download($log->real_path);
+        return app(ResponseFactory::class)->download($log->real_path);
     }
 
-    public function destroy(Request $request, LogViewer $logViewer)
+    public function destroy(Request $request, LogViewer $logViewer): mixed
     {
         if (!$log = RouteBinding::parse($request->route('logViewerFile'))) {
-            abort(404);
+            throw new NotFoundHttpException();
         }
 
         $logViewer->fileSystem()->delete($log->real_path);
 
-        return redirect()->back();
+        return app('redirect')->back();
     }
 }

@@ -6,6 +6,7 @@ use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use RuntimeException;
+use SplFileObject;
 use Symfony\Component\Finder\SplFileInfo;
 
 /**
@@ -20,35 +21,26 @@ class Log extends Model
 {
     /**
      * Cache variable for the number of lines for this log file.
-     *
-     * @var int
      */
-    private $linesCount;
+    private ?int $linesCount = null;
 
     /**
      * File handle.
-     *
-     * @var \SplFileObject
      */
-    private $handle;
+    private SplFileObject $handle;
 
     /**
      * Get the route parameter for the URL which resolves to a unique log file.
-     *
-     * @return string
      */
-    public function routeParameter()
+    public function routeParameter(): string
     {
         return RouteBinding::from($this);
     }
 
     /**
      * Get the file size as a string with a unit suffix.
-     *
-     * @param int $precision
-     * @return string
      */
-    public function size($precision = 2)
+    public function size(int $precision = 2): string
     {
         $base = log($bytes = $this->bytes(), 1024);
         if ($bytes <= 0) {
@@ -61,36 +53,26 @@ class Log extends Model
 
     /**
      * Get the file size in bytes.
-     *
-     * @return false|int
      */
-    public function bytes()
+    public function bytes(): int|false
     {
         return $this->handle()->getSize();
     }
 
     /**
      * Get a file handle.
-     *
-     * @return \SplFileObject
      */
-    public function handle()
+    public function handle(): SplFileObject
     {
-        if (is_null($this->handle)) {
-            $this->handle = $this->file->openFile('r');
-        }
-
-        return $this->handle;
+        return $this->handle ??= $this->file->openFile('r');
     }
 
     /**
      * Get a pagination instance for the lines in this log file.
      *
-     * @param int $linesPerPage
-     * @param int|null $page
-     * @return \Illuminate\Pagination\LengthAwarePaginator
+     * @return LengthAwarePaginator<array-key, string>
      */
-    public function paginate($linesPerPage = null, $page = null)
+    public function paginate(?int $linesPerPage = null, ?int $page = null): LengthAwarePaginator
     {
         $linesPerPage ??= app(LogViewer::class)->config('lines_per_page');
 
@@ -109,11 +91,9 @@ class Log extends Model
     /**
      * Read lines starting from the end of the file.
      *
-     * @param int $lines
-     * @param int $page
-     * @return array
+     * @return array<string>
      */
-    protected function readLinesFromEnd($lines, $page = 1)
+    protected function readLinesFromEnd(int $lines, int $page = 1): array
     {
         $lineLimit = app(LogViewer::class)->config('max_line_length');
 
@@ -137,10 +117,8 @@ class Log extends Model
 
     /**
      * Get the amount of lines for a specific file.
-     *
-     * @return int
      */
-    public function linesCount()
+    public function linesCount(): int
     {
         if (is_null($this->linesCount)) {
             ($handle = $this->handle())->seek($handle->getSize());
@@ -153,10 +131,8 @@ class Log extends Model
 
     /**
      * Get the display name for this log.
-     *
-     * @return string
      */
-    public function displayName()
+    public function displayName(): string
     {
         switch(app(LogViewer::class)->config('log_display_name')) {
             case 'full':

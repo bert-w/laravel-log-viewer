@@ -3,33 +3,26 @@
 namespace BertW\LaravelLogViewer;
 
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Psr\Log\LogLevel;
 
 class LogViewer
 {
     use AuthorizesAccess;
 
-    /**
-     * @var \Illuminate\Contracts\Foundation\Application
-     */
-    protected $app;
+    protected Application $app;
+
+    protected string $storagePath;
+
+    protected Filesystem $fs;
 
     /**
-     * @var string
+     * @var array<mixed>
      */
-    protected $storagePath;
-
-    /**
-     * @var \Illuminate\Contracts\Filesystem\Filesystem
-     */
-    protected $fs;
-
-    /**
-     * @var array
-     */
-    protected $fallbackConfig;
+    protected array $fallbackConfig;
 
     public function __construct(Application $app)
     {
@@ -41,53 +34,44 @@ class LogViewer
 
     /**
      * Get a route for the logviewer application, automatically prefixed.
-     * @return string
      */
-    public function route()
+    public function route(): string
     {
         $args = func_get_args();
 
-        return route($this->config('route_name_prefix', 'logviewer.') . array_shift($args), ...$args);
+        return app('url')->route($this->config('route_name_prefix', 'logviewer.') . array_shift($args), ...$args);
     }
 
     /**
      * Get a config variable for the log viewer.
-     * @param string $config
-     * @param mixed $default
-     * @return mixed
      */
-    public function config($config, $default = null)
+    public function config(string $config, mixed $default = null): mixed
     {
         return $this->app['config']->get('logviewer.' . $config, Arr::get($this->fallbackConfig, $config) ?? $default);
     }
 
-    /**
-     * @return string
-     */
-    public function storagePath()
+    public function storagePath(): string
     {
         return $this->storagePath;
     }
 
-    /**
-     * @return \Illuminate\Contracts\Filesystem\Filesystem
-     */
-    public function fileSystem()
+    public function fileSystem(): Filesystem
     {
         return $this->fs;
     }
 
     /**
      * @param string $pattern
-     * @param array $options
+     * @param array<'date'|'logLevels', string> $options
      * @return string
      */
-    public function pattern($pattern, $options = [])
+    public function pattern(string $pattern, array $options = []): string
     {
-        $options = array_merge([
+        $options = [
             'date' => '\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}(?:[\+-]\d{4})?',
             'logLevels' => '',
-        ], $options);
+            ...$options,
+        ];
 
         return [
             // Separate log file into log entries.
@@ -101,9 +85,9 @@ class LogViewer
     }
 
     /**
-     * @return array
+     * @return array<string, string>
      */
-    public function logLevels()
+    public function logLevels(): array
     {
         return [
             LogLevel::EMERGENCY => 'danger',
@@ -117,31 +101,23 @@ class LogViewer
         ];
     }
 
-    /**
-     * @return string
-     */
-    public function title()
+    public function title(): string
     {
         return $this->config('title');
     }
 
     /**
      * Try to retrieve a model from the url route binding.
-     *
-     * @param string $value
-     * @return \BertW\LaravelLogViewer\Log|false
      */
-    public function retrieveRouteBinding($value)
+    public function retrieveRouteBinding(string $value): ?Log
     {
         return RouteBinding::parse($value);
     }
 
     /**
      * Find the preselected log if an ordering is defined in the configuration.
-     *
-     * @return \BertW\LaravelLogViewer\Log|null
      */
-    public function preselected()
+    public function preselected(): ?Log
     {
         [$attribute, $order] = $this->config('preselect');
 
@@ -155,10 +131,10 @@ class LogViewer
     /**
      * Get all the logs.
      *
-     * @param array|null $sortBy
-     * @return \BertW\LaravelLogViewer\Log[]|\Illuminate\Support\Collection
+     * @param ?array{0: string, 1: 'asc'|'desc'} $sortBy
+     * @return \Illuminate\Support\Collection<string, \BertW\LaravelLogViewer\Log>
      */
-    public function logs(array $sortBy = null)
+    public function logs(?array $sortBy = null): Collection
     {
         if (!$this->fs->exists($path = $this->storagePath)) {
             return collect();
@@ -168,12 +144,13 @@ class LogViewer
 
         $dirs = $this->fs->directories($path);
 
+        /** @var \Illuminate\Support\Collection<string, \BertW\LaravelLogViewer\Log> */
         $collect = collect();
         foreach (array_merge($dirs, [$path]) as $dir) {
             foreach ($this->fs->files($dir) as $file) {
-                $collect[$file->getRealPath()] = new Log([
+                $collect[$realPath = $file->getRealPath()] = new Log([
                     'path' => $file->getPath(),
-                    'real_path' => $file->getRealPath(),
+                    'real_path' => $realPath,
                     'basename' => $file->getBasename(),
                     'accessed_at' => Carbon::createFromTimestamp($file->getATime() ?: 0),
                     'created_at' => Carbon::createFromTimestamp($file->getCTime() ?: 0),
