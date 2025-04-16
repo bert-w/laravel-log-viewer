@@ -5,6 +5,7 @@ namespace BertW\LaravelLogViewer\Http\Controllers;
 use BertW\LaravelLogViewer\LogViewer;
 use BertW\LaravelLogViewer\RouteBinding;
 use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -12,9 +13,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class LogViewerController
 {
-    public function index(Request $request, LogViewer $logViewer): ViewFactory
+    public function index(Request $request, LogViewer $logViewer): View
     {
-        return app(ViewFactory::class)('logviewer::index', [
+        return app(ViewFactory::class)->make('logviewer::index', [
             'logViewerFile' => ($param = $request->route('logViewerFile')) ? RouteBinding::parse($param) : null,
         ]);
     }

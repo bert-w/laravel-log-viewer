@@ -11,9 +11,3 @@ parameters:
 			identifier: argument.type
 			count: 3
 			path: src/Http/Controllers/LogViewerController.php
-
-		-
-			message: '#^Trying to invoke Illuminate\\Contracts\\View\\Factory but it might not be a callable\.$#'
-			identifier: callable.nonCallable
-			count: 1
-			path: src/Http/Controllers/LogViewerController.php
