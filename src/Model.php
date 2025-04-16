@@ -25,8 +25,24 @@ class Model
     /**
      * Get an attribute.
      */
-    public function __get(string $value): mixed
+    public function __get(string $name): mixed
     {
-        return $this->attributes[$value] ?? null;
+        return $this->attributes[$name] ?? null;
+    }
+
+    /**
+     * Set an attribute.
+     */
+    public function __set(string $name, mixed $value): void
+    {
+        $this->attributes[$name] = $value;
+    }
+
+    /**
+     * Check if an attribute is set.
+     */
+    public function __isset(string $name): bool
+    {
+        return isset($this->attributes[$name]);
     }
 }
