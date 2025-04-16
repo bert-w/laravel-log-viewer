@@ -19,16 +19,10 @@ class LogViewer
 
     protected Filesystem $fs;
 
-    /**
-     * @var array<mixed>
-     */
-    protected array $fallbackConfig;
-
     public function __construct(Application $app)
     {
         $this->app = $app;
         $this->fs = $this->app['files'];
-        $this->fallbackConfig = require_once(__DIR__ . '/../config/logviewer.php');
         $this->storagePath = $this->config('storage_path');
     }
 
@@ -47,7 +41,7 @@ class LogViewer
      */
     public function config(string $config, mixed $default = null): mixed
     {
-        return $this->app['config']->get('logviewer.' . $config, Arr::get($this->fallbackConfig, $config) ?? $default);
+        return $this->app['config']->get('logviewer.' . $config, $default);
     }
 
     public function storagePath(): string

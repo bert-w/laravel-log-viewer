@@ -10,6 +10,8 @@ class LogViewerServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
+        $this->mergeConfigFrom(__DIR__ . '/../config/logviewer.php', 'logviewer');
+
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'logviewer');
 
         $this->publishes([
