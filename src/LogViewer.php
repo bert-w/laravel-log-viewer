@@ -2,7 +2,7 @@
 
 namespace BertW\LaravelLogViewer;
 
-use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Foundation\Application;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;

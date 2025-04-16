@@ -4,9 +4,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
-        "illuminate/http": "*",
-        "illuminate/filesystem": "*",
-        "illuminate/pagination": "*"
+        "laravel/framework": "*"
     },
     "autoload": {
         "psr-4": {

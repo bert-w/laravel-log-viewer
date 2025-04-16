@@ -30,7 +30,7 @@ final class LogRecord extends Model
     protected function buildLines(): void
     {
         /** @var string[] $lines */
-        $lines = preg_split("/\r\n|\n|\r/", trim($this->raw)) ?: [];
+        $lines = preg_split("/\r\n|\n|\r/", trim($this->raw ?? '')) ?: [];
         $heading = array_shift($lines);
         $this->lines = collect($lines);
         $this->raw_heading = $heading ?? '';
@@ -47,7 +47,7 @@ final class LogRecord extends Model
             'logLevels' => join('|', array_keys($logViewer->logLevels())) . '|',
         ]);
 
-        preg_match($exp, $this->raw_heading, $matches);
+        preg_match($exp, $this->raw_heading ?? '', $matches);
 
         $matches = array_map(fn($i) => $i === '' ? null : $i, $matches);
 

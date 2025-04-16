@@ -42,7 +42,7 @@ class Log extends Model
      */
     public function size(int $precision = 2): string
     {
-        $base = log($bytes = $this->bytes(), 1024);
+        $base = log($bytes = $this->bytes() ?: 1, 1024);
         if ($bytes <= 0) {
             return '0 B';
         }

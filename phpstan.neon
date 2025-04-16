@@ -1,13 +1,12 @@
+includes:
+    - phpstan-baseline.neon
+
 parameters:
-    level: 6
+    level: 8
 
     scanFiles:
-        - ./phpstan/app.stub
+        - phpstan/app.stub
 
     paths:
         - config
         - src
-
-    ignoreErrors:
-        - '#Function (config|config_path|resource_path|storage_path) not found\.#'
-

@@ -1,0 +1,19 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Parameter \#1 \$value of static method BertW\\LaravelLogViewer\\RouteBinding\:\:parse\(\) expects string, object\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Http/Controllers/LogViewerController.php
+
+		-
+			message: '#^Parameter \#1 \$value of static method BertW\\LaravelLogViewer\\RouteBinding\:\:parse\(\) expects string, object\|string\|null given\.$#'
+			identifier: argument.type
+			count: 3
+			path: src/Http/Controllers/LogViewerController.php
+
+		-
+			message: '#^Trying to invoke Illuminate\\Contracts\\View\\Factory but it might not be a callable\.$#'
+			identifier: callable.nonCallable
+			count: 1
+			path: src/Http/Controllers/LogViewerController.php
