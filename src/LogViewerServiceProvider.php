@@ -8,7 +8,7 @@ use Illuminate\Support\ServiceProvider;
 
 class LogViewerServiceProvider extends ServiceProvider
 {
-    public function boot()
+    public function boot(): void
     {
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'logviewer');
 
@@ -21,14 +21,15 @@ class LogViewerServiceProvider extends ServiceProvider
         ]);
     }
 
-    public function register()
+    public function register(): void
     {
         $this->app->booted(function ($app) {
-            Route::namespace('BertW\LaravelLogViewer\Http\Controllers')
-                ->as($app['config']->get('logviewer.route_name_prefix') ?? 'logviewer.')
-                ->middleware([Authenticate::class])
-                ->prefix($app['config']->get('logviewer.url') ?? '/logviewer')
-                ->group(__DIR__ . '/Http/routes.php');
+            Route::group([
+                'middleware' => [Authenticate::class],
+                'namespace' => 'BertW\LaravelLogViewer\Http\Controllers',
+                'as' => $app['config']->get('logviewer.route_name_prefix') ?? 'logviewer.',
+                'prefix' => $app['config']->get('logviewer.url') ?? '/logviewer',
+            ], __DIR__ . '/Http/routes.php');
         });
 
         $this->app->singleton(LogViewer::class, function ($app) {

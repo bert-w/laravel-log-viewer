@@ -8,10 +8,13 @@ namespace BertW\LaravelLogViewer;
 class Model
 {
     /**
-     * @var array
+     * @var array<string, mixed>
      */
-    protected $attributes = [];
+    protected array $attributes = [];
 
+    /**
+     * @param array<string, mixed> $attributes
+     */
     public function __construct(array $attributes = [])
     {
         foreach ($attributes as $key => $value) {
@@ -21,11 +24,8 @@ class Model
 
     /**
      * Get an attribute.
-     *
-     * @param string $value
-     * @return mixed
      */
-    public function __get($value)
+    public function __get(string $value): mixed
     {
         return $this->attributes[$value] ?? null;
     }

@@ -3,18 +3,16 @@
 namespace BertW\LaravelLogViewer\Http\Middleware;
 
 use BertW\LaravelLogViewer\LogViewer;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Authenticate
 {
     /**
      * Handle the incoming request.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param \Closure $next
-     * @return \Illuminate\Http\Response|null
      */
-    public function handle($request, $next)
+    public function handle(Request $request, \Closure $next): mixed
     {
-        return LogViewer::check($request) ? $next($request) : abort(403);
+        return LogViewer::check($request) ? $next($request) : throw new HttpException(403);
     }
 }

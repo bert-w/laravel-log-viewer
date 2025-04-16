@@ -3,10 +3,8 @@
     "description": "A fast Laravel log viewer to read any of your log files.",
     "license": "MIT",
     "require": {
-        "php": "^7.4|^8.0",
-        "illuminate/http": "*",
-        "illuminate/filesystem": "*",
-        "illuminate/pagination": "*"
+        "php": "^8.1",
+        "laravel/framework": "*"
     },
     "autoload": {
         "psr-4": {
@@ -20,5 +18,8 @@
             ]
         }
     },
-    "minimum-stability": "stable"
+    "minimum-stability": "stable",
+    "require-dev": {
+        "phpstan/phpstan": "^2.1"
+    }
 }

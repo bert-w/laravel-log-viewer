@@ -13,28 +13,23 @@ class RouteBinding
 {
     /**
      * Get the route binding from a log.
-     *
-     * @return string
      */
-    public static function from(Log $log)
+    public static function from(Log $log): string
     {
         return Crypt::encrypt($log->real_path);
     }
 
     /**
      * Get the log from a route binding.
-     *
-     * @param string $value
-     * @return \BertW\LaravelLogViewer\Log|false
      */
-    public static function parse($value)
+    public static function parse(string $value): ?Log
     {
         try {
             $file = Crypt::decrypt($value);
 
-            return app(LogViewer::class)->logs()[$file] ?? false;
+            return app(LogViewer::class)->logs()[$file] ?? null;
         } catch (DecryptException $e) {
-            return false;
+            return null;
         }
     }
 }
